@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
+    <title>Painel Admin | Sane Online</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+   
+    <div class="admin-container">
+        <div class="admin-header">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Sane Online" class="admin-logo">
+        </div>
+        <h1 class="admin-title">Controle de Disponibilidade</h1>
+        
+        <div class="admin-alert">
+            <i class="bi bi-info-circle"></i> Altere o status dos itens e clique em "Salvar Configurações"
+        </div>
+
+        <form method="POST" class="admin-form">
+            {% for item in opcoes %}
+            <div class="admin-card">
+                <div class="admin-card-body">
+                    <div class="admin-item-info">
+                        <h5 class="admin-item-title">#{{ item.id }} - {{ item.nome }}</h5>
+                        <p class="admin-item-price">{{ item.preco|format_brl }}</p>
+                    </div>
+                    <div class="admin-switch">
+                        <input class="admin-switch-input" type="checkbox" 
+                               id="disponivel_{{ item.id }}" name="disponivel_{{ item.id }}" 
+                               {% if item.disponivel %}checked{% endif %}>
+                        <label class="admin-switch-label" for="disponivel_{{ item.id }}">
+                            {% if item.disponivel %}
+                                <span class="admin-available">Disponível</span>
+                            {% else %}
+                                <span class="admin-unavailable">Indisponível</span>
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="admin-actions">
+                <button type="submit" class="admin-btn-save">
+                    <i class="bi bi-save"></i> Salvar Configurações
+                </button>
+                <a href="{{ url_for('index') }}" class="admin-btn-back">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

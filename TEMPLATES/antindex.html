@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
+    <title>Sane Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='Logo.png') }}" width="130" height="130">
+        <h1>Faça seu pedido!</h1>
+    <div class="container">
+       
+        <a href="/opcoes">
+            <button>Opções de Hoje</button>
+        </a>
+
+        {% if pedido %}
+            <p><strong>Pedido Selecionado:</strong> {{ pedido }}</p>
+        {% endif %}
+
+        <form action="/fazer_pedido" method="post">
+            <label for="pagamento">Forma de Pagamento:</label>
+            <select id="pagamento" name="pagamento" required>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Cartão de Débito">Cartão de Débito</option>
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" name="cidade" required>
+
+            <label for="bairro">Bairro:</label>
+            <input type="text" id="bairro" name="bairro" required>
+
+            <label for="rua">Rua:</label>
+            <input type="text" id="rua" name="rua" required>
+
+            <label for="numero">Número:</label>
+            <input type="text" id="numero" name="numero" required>
+
+            <label for="ponto_referencia">Ponto de Referência:</label>
+            <input type="text" id="ponto_referencia" name="ponto_referencia">
+
+            <button type="submit">Finalizar Pedido</button>
+        </form>
+    </div>
+    <footer>
+        <p>📍 Maceió - Alagoas | &copy; 2025 Sane Online</p>
+    </footer>
+</body>
+</html>

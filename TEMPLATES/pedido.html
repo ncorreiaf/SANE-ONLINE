@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
+    <title>Sane Online - Finalizar Pedido</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_pedido.css') }}">
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='Logo.png') }}" width="130" height="130">
+        <h1>Finalizar Pedido</h1>
+        
+        <div class="itens-pedido">
+            <h3>Seu Pedido:</h3>
+            {% for item in carrinho %}
+                <div class="item-carrinho">
+                    <span>{{ item.nome }}</span>
+                    <span>{{ item.preco|format_brl }}</span>
+                </div>
+            {% endfor %}
+            <div class="total-pedido">
+                Total: {{ (carrinho|sum(attribute='preco'))|format_brl }}
+            </div>
+        </div>
+
+        <form action="/fazer_pedido" method="post">
+            <div class="form-section">
+                <h3>Seus Dados</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="nome_cliente">Nome Completo*</label>
+                        <input type="text" id="nome_cliente" name="nome_cliente" required>
+                    </div>
+                    <div>
+                        <label for="telefone">WhatsApp*</label>
+                        <input type="tel" id="telefone" name="telefone" required 
+                               pattern="[0-9]{10,11}" 
+                               title="Digite um número de telefone válido (DDD + número)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Forma de Pagamento</h3>
+                <select id="pagamento" name="pagamento" required>
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="Pix">Pix</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <h3>Endereço de Entrega</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="cidade">Cidade*</label>
+                        <input type="text" id="cidade" name="cidade" required value="Campo Alegre">
+                    </div>
+                    <div>
+                        <label for="bairro">Bairro*</label>
+                        <input type="text" id="bairro" name="bairro" required>
+                    </div>
+                    <div>
+                        <label for="rua">Rua*</label>
+                        <input type="text" id="rua" name="rua" required>
+                    </div>
+                    <div>
+                        <label for="numero">Número*</label>
+                        <input type="text" id="numero" name="numero" required>
+                    </div>
+                    <div class="full-width">
+                        <label for="ponto_referencia">Ponto de Referência</label>
+                        <input type="text" id="ponto_referencia" name="ponto_referencia" 
+                               placeholder="Ex: Casa azul com portão branco">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Confirmar Pedido</button>
+        </form>
+    </div>
+    <footer>
+        <p>📍 Maceió - Alagoas | &copy; 2025 Sane Online</p>
+    </footer>
+
+    <script>
+        // Validação básica do formulário
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const telefone = document.getElementById('telefone').value;
+            if(!/^\d{10,11}$/.test(telefone)) {
+                alert('Por favor, insira um número de WhatsApp válido (apenas números, com DDD)');
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

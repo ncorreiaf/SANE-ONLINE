@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
+    <title>Sane Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_opcoes.css') }}">
+    <style>
+        .carrinho-flutuante {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 250px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .carrinho-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .carrinho-item button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+        }
+        .carrinho-total {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+        }
+        .carrinho-acoes {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .carrinho-acoes a {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Carrinho Flutuante -->
+    <div class="carrinho-flutuante">
+        <h3>🛒 Carrinho ({{ carrinho|length }})</h3>
+        {% if carrinho %}
+            {% for item in carrinho %}
+                <div class="carrinho-item">
+                    <span>{{ item.nome }}</span>
+                    <span>{{ item.preco|format_brl }}</span>
+                    <a href="{{ url_for('remover_item', index=loop.index0) }}">
+                        <button>×</button>
+                    </a>
+                </div>
+            {% endfor %}
+            <div class="carrinho-total">
+                Total: {{ (carrinho|sum(attribute='preco'))|format_brl }}
+            </div>
+            <div class="carrinho-acoes">
+                <a href="{{ url_for('finalizar_pedido') }}">Finalizar</a>
+                <a href="{{ url_for('opcoes') }}">Continuar</a>
+            </div>
+        {% else %}
+            <p style="text-align: center; color: #888;">Carrinho vazio</p>
+        {% endif %}
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <img src="{{ url_for('static', filename='Logo.png') }}" width="150" height="150">
+        <hr>
+        <h1>Opções do Dia</h1>
+        <hr>
+        <div class="menu">
+            {% for item in opcoes %}
+                <div class="item">
+                    <img src="{{ url_for('static', filename=item.imagem) }}" width="150" height="150">
+                    <p><strong>{{ item.nome }}</strong></p>
+                    <p>Preço: {{ item.preco|format_brl }}</p>  <!-- Usando o filtro aqui -->
+                    <hr>
+                    <a href="{{ url_for('adicionar_carrinho', id_item=item.id) }}">
+                        <button>Adicionar ao Carrinho</button>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <h2>Monte seu prato</h2>
+        <p>Preço: {{ 20.00|format_brl }}</p>
+        <hr>
+        <form action="{{ url_for('adicionar_personalizado') }}" method="post">
+            <div style="column-count: 2; column-gap: 20px;">
+                {% for ingrediente in ingredientes %}
+                    <label style="display: block; margin-bottom: 8px;">
+                        <input type="checkbox" name="ingredientes" value="{{ ingrediente }}">
+                        {{ ingrediente }}
+                    </label>
+                {% endfor %}
+            </div>
+            <button type="submit" style="margin-top: 15px; background: #ff6b6b; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Adicionar ao Carrinho
+            </button>
+        </form>
+    </div>
+    <footer>
+        <p>📍 Maceió - Alagoas | &copy; 2025 Sane Online</p>
+    </footer>
+</body>
+</html>

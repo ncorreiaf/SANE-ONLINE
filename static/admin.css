@@ -1,0 +1,215 @@
+/* admin.css - Painel de Administração Tempero de Mainha */
+
+:root {
+    --primary: #ff6b6b;
+    --secondary: #495057;
+    --success: #28a745;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --border: #dee2e6;
+    --container-bg: #dc3545; /* Sua alteração de fundo vermelho */
+    --text-light: #ffffff;
+  }
+  
+  /* Base Styles */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: var(--dark);
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .admin-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--container-bg);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 30px;
+  }
+  
+  .admin-logo {
+    height: 150px; /* Sua alteração de tamanho */
+    display: block;
+    margin: 0 auto 25px;
+  }
+  
+  h1, h2, h3, p {
+    color: var(--text-light); /* Sua alteração de texto branco */
+  }
+  
+  .admin-title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+  }
+  
+  .admin-alert {
+    background-color: #e7f5ff;
+    color: var(--dark);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Card Styles */
+  .admin-card {
+    background: var(--light);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--primary);
+  }
+  
+  .admin-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .admin-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .admin-item-info {
+    flex: 1;
+  }
+  
+  .admin-item-title {
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+  }
+  
+  .admin-item-price {
+    color: var(--success);
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  /* Switch Styles */
+  .admin-switch {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .admin-switch-input {
+    width: 60px !important;
+    height: 34px !important;
+    cursor: pointer;
+  }
+  
+  .admin-switch-label {
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 100px;
+    text-align: center;
+  }
+  
+  .admin-available {
+    color: var(--success);
+    font-weight: 600;
+  }
+  
+  .admin-unavailable {
+    color: var(--danger);
+    font-weight: 600;
+  }
+  
+  /* Button Styles */
+  .admin-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  .admin-btn-save {
+    background-color: var(--success); /* Seu botão verde */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .admin-btn-save:hover {
+    background-color: var(--primary); /* Sua alteração hover vermelho */
+    transform: translateY(-2px);
+  }
+  
+  .admin-btn-back {
+    background-color: var(--secondary);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  
+  .admin-btn-back:hover {
+    background-color: #3d4349;
+    transform: translateY(-2px);
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .admin-card-body {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    
+    .admin-switch {
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .admin-actions {
+      flex-direction: column;
+    }
+    
+    .admin-title {
+      font-size: 1.7rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .admin-container {
+      padding: 15px;
+    }
+    
+    .admin-card-body {
+      padding: 15px;
+    }
+    
+    .admin-logo {
+      height: 120px;
+    }
+  }

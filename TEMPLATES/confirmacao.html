@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
+    <title>Pedido Confirmado #{{ pedido_id }} | Sane Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_confirm.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Tempero de Mainha">
+        </div>
+
+        <h1>✅ Pedido Confirmado!</h1>
+        <div class="pedido-id">Pedido #{{ pedido_id }}</div>
+        <div class="data-hora">{{ data_hora }}</div>
+
+        <div class="pedido-card">
+            <h3>Detalhes do Cliente</h3>
+            <p><strong>Nome:</strong> {{ cliente }}</p>
+            <p><strong>WhatsApp:</strong> {{ telefone }}</p>
+            
+            <h3 style="margin-top: 20px;">Detalhes do Pedido</h3>
+            <p><strong>Itens:</strong><br>{{ pedido|replace("|", "<br>")|safe }}</p>
+            
+            <p><strong>Forma de pagamento:</strong> {{ pagamento }}</p>
+            
+            <h3 style="margin-top: 20px;">Endereço de Entrega</h3>
+            <p>{{ endereco }}</p>
+            {% if referencia %}
+            <p><strong>Ponto de referência:</strong> {{ referencia }}</p>
+            {% endif %}
+        </div>
+
+        <div class="valor-total">
+            Valor total: <span>{{ valor_total }}</span>
+        </div>
+
+        <div class="mensagem-agradecimento">
+            <p>Seu pedido está sendo preparado com carinho!</p>
+            <p>Em caso de dúvidas, apresente o código #{{ pedido_id }} no WhatsApp.</p>
+            <p>Obrigado pela preferência! Bom apetite! 😊</p>
+        </div>
+
+        <a href="/" class="btn-voltar">Voltar ao Início</a>
+
+        <footer>
+            <p>📍 Maceió - Alagoas | &copy; 2025 Sane Online</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
+    <title>Sane Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_init.css') }}">
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='Logo.png') }}" class="logo">
+        <h1>Bem-vindo ao <span class="highlight">Sane Online</span></h1>
+        <p class="descricao">Sabores caseiros feitos com amor para você!</p>
+
+        <!-- Galeria de imagens -->
+        <div class="galeria">
+            <img src="{{ url_for('static', filename='churrasco.jpg') }}" class="prato">
+            <img src="{{ url_for('static', filename='macarronada.jpg') }}" class="prato">
+            <img src="{{ url_for('static', filename='feijoada.jpg') }}" class="prato">
+            <img src="{{ url_for('static', filename='Moda da Casa.png') }}" class="prato">
+        </div>
+
+        <!-- Botão abaixo das imagens -->
+        <a href="{{ url_for('opcoes') }}">
+            <button class="botao">Ver Opções do Dia</button>
+        </a>
+    </div>
+
+    <footer>
+        <p>📍 Maceió - Alagoas | &copy; 2025 Sane Online</p>
+    </footer>
+</body>
+</html>

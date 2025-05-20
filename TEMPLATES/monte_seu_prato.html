@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
+    <title>Sane Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Sane Online</h1>
+    <img src="{{ url_for('static', filename='Logo.png') }}" width="130" height="130">
+    <h1>Faça seu pedido!</h1>
+
+    <!-- Alterado para garantir fundo vermelho -->
+    <div class="monte-seu-prato">
+        <h1>Monte seu prato</h1>
+        <form action="/monte_seu_prato" method="post">
+            <div class="opcoes">
+                {% for opcao in opcoes %}
+                    <label>
+                        <input type="checkbox" name="opcoes" value="{{ opcao }}"> {{ opcao }}
+                    </label>
+                {% endfor %}
+            </div>
+            <button type="submit">Confirmar Prato</button>
+        </form>
+    </div>
+    <footer>
+        <p>📍 Maceió - Alagoas | &copy; 2025 Sane Online</p>
+    </footer>
+</body>
+</html>
