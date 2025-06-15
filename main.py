@@ -194,25 +194,29 @@ def fazer_pedido():
         data_hora=data_hora
     )
 
-# Painel Admin
+# Admin
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
         disponibilidade = {}
-        for item in CARDAPIO_COMPLETO:
-            disponibilidade[str(item['id'])] = request.form.get(f'disponivel_{item["id"]}') == 'on'
+        opcoes_bd = OPCOES_DISPONIVEIS.find({})
+        for item in opcoes_bd:
+            item_id = str(item['_id'])
+            disponibilidade[item_id] = request.form.get(f'disponivel_{item_id}') == 'on'
         salvar_disponibilidade(disponibilidade)
         return redirect(url_for('admin'))
     
-    disponibilidade = carregar_disponibilidade()
     opcoes_com_status = []
-    for item in CARDAPIO_COMPLETO:
+    for item in OPCOES_DISPONIVEIS.find({}):
         opcoes_com_status.append({
-            **item,
-            "disponivel": disponibilidade.get(str(item['id']), True)
+            "id": item['_id'],
+            "nome": item['nome'],
+            "preco": item['preco'],
+            "imagem": item['imagem'],
+            "disponivel": item['disponivel']
         })
     
     return render_template("admin.html", opcoes=opcoes_com_status)
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     app.run(host='0.0.0.0', port=5000, debug=True)
