@@ -18,9 +18,8 @@
         <form action="/monte_seu_prato" method="post">
             <div class="opcoes">
                 {% for opcao in opcoes %}
-                    <label>
-                        <input type="checkbox" name="opcoes" value="{{ opcao }}"> {{ opcao }}
-                    </label>
+                    <input type="checkbox" id="opcao_{{ loop.index }}" name="opcoes" value="{{ opcao }}">
+                    <label for="opcao_{{ loop.index }}">{{ opcao }}</label><br>
                 {% endfor %}
             </div>
             <button type="submit">Confirmar Prato</button>
