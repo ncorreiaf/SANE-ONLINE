@@ -1,28 +1,36 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import pandas as pd
-import os
 import json
 import uuid
-from datetime import timedelta
+from datetime import timedelta, datetime
 from threading import Lock
+from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'sua_chave_secreta_aqui'  # Altere para uma chave secreta forte em produção
+app.secret_key = os.getenv('KEY', 'chave')
 app.permanent_session_lifetime = timedelta(minutes=30)
 
-# Lock para operações thread-safe
 pedido_lock = Lock()
 
-# Filtro para formatar preços
+# MongoDB
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
+DB_NAME = os.getenv('DB_NAME', 'saneonline')
+CLIENT = MongoClient(MONGO_URI)
+DB = CLIENT[DB_NAME]
+
+# Coleções
+PEDIDOS_LISTA = DB['pedidos']
+OPCOES_DISPONIVEIS = DB['opcoes']
+
+# Preços
 @app.template_filter('format_brl')
 def format_brl(value):
     if isinstance(value, (int, float)):
         return f"R$ {value:,.2f}".replace(".", "X").replace(",", ".").replace("X", ",")
     return value
-
-# Arquivos de dados
-OPCOES_DISPONIVEIS_FILE = "opcoes_disponiveis.json"
-PEDIDOS_FILE = "pedidos.xlsx"
 
 # Cardápio completo
 CARDAPIO_COMPLETO = [
@@ -38,48 +46,35 @@ ingredientes_disponiveis = [
     "Frango assado", "Frango guisado", "Boi assado", "Boi guisado"
 ]
 
-# Funções de controle de disponibilidade
+# Funções de controle de disponibilidade com MongoDB
+def inicializar_opcoes():
+    if OPCOES_DISPONIVEIS.count_documents({}) == 0:
+        for item in CARDAPIO_COMPLETO:
+            OPCOES_DISPONIVEIS.insert_one({"_id": item["id"], **item, "disponivel": True})
+    
 def carregar_disponibilidade():
-    try:
-        if os.path.exists(OPCOES_DISPONIVEIS_FILE):
-            with open(OPCOES_DISPONIVEIS_FILE, 'r') as f:
-                return json.load(f)
-        return {str(item['id']): True for item in CARDAPIO_COMPLETO}
-    except:
-        return {str(item['id']): True for item in CARDAPIO_COMPLETO}
+    opcoes = OPCOES_DISPONIVEIS.find({})
+    return {str(item['_id']): item['disponivel'] for item in opcoes}
 
 def salvar_disponibilidade(disponibilidade):
-    with open(OPCOES_DISPONIVEIS_FILE, 'w') as f:
-        json.dump(disponibilidade, f)
+    for item_id, disponivel in disponibilidade.items():
+        OPCOES_DISPONIVEIS.update_one({"_id": int(item_id)}, {"$set": {"disponivel": disponivel}})
 
 def get_opcoes_disponiveis():
-    disponibilidade = carregar_disponibilidade()
-    return [item for item in CARDAPIO_COMPLETO if disponibilidade.get(str(item['id']), True)]
+    return list(OPCOES_DISPONIVEIS.find({"disponivel": True}))
 
-# Funções para pedidos
-def criar_tabela_excel():
-    if not os.path.exists(PEDIDOS_FILE):
-        colunas = [
-            "ID", "DataHora", "Cliente", "Telefone", "Pedido", 
-            "Pagamento", "Cidade", "Bairro", "Rua", "Numero", 
-            "Referencia", "ValorTotal", "Status"
-        ]
-        df = pd.DataFrame(columns=colunas)
-        df.to_excel(PEDIDOS_FILE, index=False, engine="openpyxl")
-
+# Pedidos no MDB
 def salvar_pedido(dados):
     with pedido_lock:
-        df = pd.read_excel(PEDIDOS_FILE, engine="openpyxl") if os.path.exists(PEDIDOS_FILE) else pd.DataFrame()
-        df = pd.concat([df, pd.DataFrame([dados])], ignore_index=True)
-        df.to_excel(PEDIDOS_FILE, index=False, engine="openpyxl")
+        PEDIDOS_LISTA.insert_one(dados)
 
 def formatar_preco(preco):
     return f"R$ {preco:,.2f}".replace(".", "X").replace(",", ".").replace("X", ",")
 
 # Inicialização
-criar_tabela_excel()
+inicializar_opcoes()
 
-# Rotas principais
+# Rotas
 @app.route('/')
 def index():
     if 'carrinho' not in session:
@@ -91,7 +86,7 @@ def opcoes():
     if 'carrinho' not in session:
         session['carrinho'] = []
     return render_template(
-        "opcoes.html", 
+        "opcoes.html",
         opcoes=get_opcoes_disponiveis(),
         ingredientes=ingredientes_disponiveis,
         carrinho=session['carrinho']
@@ -102,14 +97,11 @@ def adicionar_carrinho(id_item):
     if 'carrinho' not in session:
         session['carrinho'] = []
     
-    item = next((item for item in get_opcoes_disponiveis() if item["id"] == id_item), None)
+    # Busca item
+    item = OPCOES_DISPONIVEIS.find_one({"_id": id_item, "disponivel": True})
     if item:
-        session['carrinho'].append({
-            "id": item["id"],
-            "nome": item["nome"],
-            "preco": item["preco"],
-            "imagem": item["imagem"]
-        })
+        item_para_carrinho = {k: v for k, v in item.items() if k != '_id'}
+        session['carrinho'].append(item_para_carrinho)
         session.modified = True
     
     return redirect(url_for('opcoes'))
@@ -122,7 +114,7 @@ def adicionar_personalizado():
     ingredientes = request.form.getlist('ingredientes')
     if ingredientes:
         session['carrinho'].append({
-            "id": 999,  # ID especial para pratos personalizados
+            "id": 999,
             "nome": "Monte seu prato: " + ", ".join(ingredientes),
             "preco": 20.00,
             "imagem": "personalizado.jpg"
@@ -144,7 +136,7 @@ def finalizar_pedido():
         return redirect(url_for('opcoes'))
     
     itens_formatados = [
-        f"{item['nome']} ({formatar_preco(item['preco'])})" 
+        f"{item['nome']} ({formatar_preco(item['preco'])})"
         for item in session['carrinho']
     ]
     
@@ -160,21 +152,19 @@ def fazer_pedido():
     if 'carrinho' not in session or len(session['carrinho']) == 0:
         return redirect(url_for('index'))
     
-    # Gerar dados únicos do pedido
+    # Dados únicos
     pedido_id = str(uuid.uuid4())[:8].upper()
-    data_hora = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Formatando itens
+    data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S") # Data
+
     itens_formatados = [f"{item['nome']} ({formatar_preco(item['preco'])})" for item in session['carrinho']]
     valor_total = sum(item['preco'] for item in session['carrinho'])
-    
-    # Dados completos do pedido
+
     dados_pedido = {
         "ID": pedido_id,
         "DataHora": data_hora,
         "Cliente": request.form.get("nome_cliente"),
         "Telefone": request.form.get("telefone"),
-        "Pedido": " | ".join(itens_formatados),
+        "Pedido": itens_formatados,
         "Pagamento": request.form.get("pagamento"),
         "Cidade": request.form.get("cidade"),
         "Bairro": request.form.get("bairro"),
@@ -184,14 +174,11 @@ def fazer_pedido():
         "ValorTotal": valor_total,
         "Status": "Recebido"
     }
-    
-    # Salvar de forma thread-safe
+
     salvar_pedido(dados_pedido)
-    
-    # Preparar dados para confirmação
+
     endereco = f"{dados_pedido['Rua']}, {dados_pedido['Numero']}, {dados_pedido['Bairro']}, {dados_pedido['Cidade']}"
-    
-    # Limpar carrinho
+
     session.pop('carrinho', None)
     
     return render_template(
