@@ -32,5 +32,25 @@ Um sistema simples de pedidos de marmitas online desenvolvido com **Flask**, **P
 1. **Clone este repositório:**
 
 ```bash
-git clone https://github.com/seuusuario/sistema-pedidos-flask.git
-cd sistema-pedidos-flask
+git clone https://github.com/ncorreiaf/SANE-ONLINE.git
+cd SANE-ONLINE
+```
+
+2. **Dependências Python:**
+```bash
+pip install Flask pymongo python-dotenv pandas openpyxl
+```
+
+3. **Instale o MongoDB:**
+
+[MongoDB](https://www.mongodb.com/try/download/community)
+
+4. **Inicialize o servidor**
+```bash
+mongod --dbpath /caminho/para/seus/dados/db
+```
+
+5. **Execute o arquivo main**
+```bash
+python main.py
+```
