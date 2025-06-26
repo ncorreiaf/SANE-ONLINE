@@ -39,6 +39,8 @@ cd SANE-ONLINE
 2. **Dependências Python:**
 ```bash
 pip install Flask pymongo python-dotenv pandas openpyxl
+pip install pymongo python-dotenv
+pip install flask pymongo flask-wtf wtforms werkzeug
 ```
 
 3. **Instale o MongoDB:**
