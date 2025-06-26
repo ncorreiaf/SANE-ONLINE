@@ -5,25 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
     <title>Sane Online</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style_init.css') }}">
+    <!-- Incluindo Tailwind CSS para facilitar a estilização -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Definindo a fonte Inter para todo o corpo */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8f9fa; /* Um fundo mais suave */
+            color: #343a40; /* Cor de texto padrão */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Garante que o footer fique no final da página */
+            position: relative; /* Para posicionar os botões */
+        }
+        .container {
+            flex-grow: 1; /* Permite que o container ocupe o espaço disponível */
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            display: block;
+            border-radius: 50%; /* Faz a logo circular, se for o caso */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #28a745; /* Verde vibrante */
+            margin-bottom: 15px;
+        }
+        .highlight {
+            color: #007bff; /* Azul para destaque */
+        }
+        .descricao {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+        .galeria {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        .prato {
+            width: 100%;
+            height: 150px; /* Altura fixa para as imagens da galeria */
+            object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        .prato:hover {
+            transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+        }
+        footer {
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto; /* Empurra o footer para o final */
+            width: 100%;
+        }
+        /* Estilos para o grupo de botões superiores */
+        .top-buttons {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem; /* Espaçamento entre os botões */
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
+    <div class="top-buttons">
+        <!-- Botão Gerenciar Cardápio (visível apenas para admin) -->
+        {% if session.get('tipo') == 'admin' %}
+        <a href="{{ url_for('gerenciar_cardapio') }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-lg
+                  text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-300 ease-in-out">
+            Gerenciar Cardápio
+        </a>
+        {% endif %}
+
+        <!-- Botão Deslogar (visível se houver um usuário logado) -->
+        {% if session.get('usuario') %}
+        <a href="{{ url_for('logout') }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-lg
+                  text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700
+                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 ease-in-out">
+            Deslogar
+        </a>
+        {% endif %}
+    </div>
+
     <div class="container">
-        <img src="{{ url_for('static', filename='Logo.png') }}" class="logo">
+        <img src="{{ url_for('static', filename='Logo.png') }}" class="logo" alt="Logo Sane Online">
         <h1>Bem-vindo ao <span class="highlight">Sane Online</span></h1>
         <p class="descricao">Sabores caseiros feitos com amor para você!</p>
 
         <!-- Galeria de imagens -->
         <div class="galeria">
-            <img src="{{ url_for('static', filename='churrasco.jpg') }}" class="prato">
-            <img src="{{ url_for('static', filename='macarronada.jpg') }}" class="prato">
-            <img src="{{ url_for('static', filename='feijoada.jpg') }}" class="prato">
-            <img src="{{ url_for('static', filename='Moda da Casa.png') }}" class="prato">
+            <img src="{{ url_for('static', filename='uploads/churrasco.jpg') }}" class="prato" alt="Churrasco">
+            <img src="{{ url_for('static', filename='uploads/macarronada.jpg') }}" class="prato" alt="Macarronada">
+            <img src="{{ url_for('static', filename='uploads/feijoada.jpg') }}" class="prato" alt="Feijoada">
+            <img src="{{ url_for('static', filename='uploads/Moda da Casa.png') }}" class="prato" alt="Moda da Casa">
         </div>
 
-        <!-- Botão abaixo das imagens -->
-        <a href="{{ url_for('opcoes') }}">
-            <button class="botao">Ver Opções do Dia</button>
+        <!-- Botão Ver Opções do Dia estilizado com Tailwind -->
+        <a href="{{ url_for('opcoes') }}"
+           class="inline-block px-8 py-4 bg-green-600 text-white font-bold text-xl rounded-xl shadow-xl
+                  hover:bg-green-700 transition-all duration-300 ease-in-out transform hover:scale-105">
+            Ver Opções do Dia
         </a>
     </div>
 
