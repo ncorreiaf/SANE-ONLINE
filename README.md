@@ -19,6 +19,11 @@ Um sistema simples de pedidos de marmitas online desenvolvido com **Flask**, **P
 
 - Python 3
 - Flask
+- pymongo
+- Flask-wtf
+- wtforms
+- werkzeug
+- python-dotenv
 - Pandas
 - openpyxl
 - HTML + Jinja2 Templates
@@ -39,8 +44,7 @@ cd SANE-ONLINE
 2. **Dependências Python:**
 ```bash
 pip install Flask pymongo python-dotenv pandas openpyxl
-pip install pymongo python-dotenv
-pip install flask pymongo flask-wtf wtforms werkzeug
+pip install  flask-wtf wtforms werkzeug
 ```
 
 3. **Instale o MongoDB:**
