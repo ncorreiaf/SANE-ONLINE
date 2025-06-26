@@ -1,6 +1,6 @@
 # 🍽️ Sistema de Pedidos com Flask
 
-Um sistema simples de pedidos de marmitas online desenvolvido com **Flask**, **Pandas** e **Excel**, com funcionalidades de cardápio dinâmico, montagem de prato personalizado, carrinho de compras, finalização de pedido e painel administrativo para controle de disponibilidade.
+Um sistema simples de pedidos de marmitas online desenvolvido com **Flask**, **Pandas** e **MONGODB**, com funcionalidades de cardápio dinâmico, montagem de prato personalizado, carrinho de compras, finalização de pedido e painel administrativo para controle de disponibilidade.
 
 ---
 
