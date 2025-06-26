@@ -5,59 +5,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='Logo.png') }}">
     <title>Sane Online</title>
+    <!-- Incluindo Tailwind CSS para facilitar a estilização -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style_opcoes.css') }}">
     <style>
+        /* Estilos gerais para o corpo e fonte */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8f9fa; /* Um fundo mais suave */
+            color: #343a40; /* Cor de texto padrão */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px; /* Aumenta a largura máxima para melhor visualização */
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        h1, h2 {
+            /* A cor do h1 e h2 agora será definida diretamente no HTML com Tailwind */
+            margin-bottom: 20px;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 20px auto;
+            width: 80%;
+        }
+        /* A classe .logo agora terá centralização via Tailwind */
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        /* Estilos do Menu de Opções */
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+        .item {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        .item:hover {
+            transform: translateY(-5px);
+        }
+        .item img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .item p {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .item strong {
+            color: #1f2937;
+            font-size: 1.3rem;
+        }
+
+        /* Estilos Carrinho Flutuante */
         .carrinho-flutuante {
             position: fixed;
             top: 20px;
             right: 20px;
             background: white;
-            border: 2px solid #ff6b6b;
+            border: 2px solid #3b82f6; /* Azul consistente com o novo estilo */
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada */
             z-index: 1000;
-            width: 250px;
-            max-height: 70vh;
+            width: 280px; /* Aumenta a largura para melhor visualização */
+            max-height: 80vh; /* Permite mais altura para rolagem */
             overflow-y: auto;
+            transform: translateX(0); /* Garante que não está escondido */
+            transition: transform 0.3s ease-out; /* Transição suave */
+        }
+        .carrinho-flutuante h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carrinho-flutuante h3 svg { /* Para um ícone de carrinho, se usar SVG */
+            margin-right: 8px;
         }
         .carrinho-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px dashed #eee;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e5e7eb; /* Borda mais suave */
+            font-size: 0.95rem;
         }
-        .carrinho-item button {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
+        .carrinho-item:last-child {
+            border-bottom: none;
         }
         .carrinho-total {
             font-weight: bold;
             text-align: right;
-            margin-top: 10px;
-        }
-        .carrinho-acoes {
-            display: flex;
-            justify-content: space-between;
             margin-top: 15px;
+            font-size: 1.1rem;
+            color: #1f2937;
         }
-        .carrinho-acoes a {
-            background: #ff6b6b;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
+        /* Os estilos dos botões do carrinho serão via Tailwind diretamente no HTML */
+
+        /* Estilos do Monte seu Prato */
+        .personalizado-form {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .personalizado-form label {
+            display: flex; /* Para alinhar checkbox e texto */
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        .personalizado-form input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.1);
+        }
+        /* Para telas menores */
+        @media (max-width: 768px) {
+            .carrinho-flutuante {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+                top: auto;
+                bottom: 20px; /* Fixa o carrinho na parte inferior em telas pequenas */
+                max-height: 50vh;
+            }
+            .menu {
+                grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Botão "Voltar ao Início" posicionado no canto superior esquerdo -->
+    <div class="absolute top-4 left-4 z-10">
+        <a href="{{ url_for('index') }}"
+           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm
+                  text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                  transition-all duration-300 ease-in-out">
+            ← Voltar ao Início
+        </a>
+    </div>
+
     <!-- Carrinho Flutuante -->
     <div class="carrinho-flutuante">
         <h3>🛒 Carrinho ({{ carrinho|length }})</h3>
@@ -66,61 +187,75 @@
                 <div class="carrinho-item">
                     <span>{{ item.nome }}</span>
                     <span>{{ item.preco|format_brl }}</span>
-                    <a href="{{ url_for('remover_item', index=loop.index0) }}">
-                        <button>×</button>
+                    <a href="{{ url_for('remover_item', index=loop.index0) }}"
+                       class="ml-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full w-6 h-6 flex items-center justify-center text-xs">
+                        ×
                     </a>
                 </div>
             {% endfor %}
             <div class="carrinho-total">
                 Total: {{ (carrinho|sum(attribute='preco'))|format_brl }}
             </div>
-            <div class="carrinho-acoes">
-                <a href="{{ url_for('finalizar_pedido') }}">Finalizar</a>
-                <a href="{{ url_for('opcoes') }}">Continuar</a>
+            <div class="carrinho-acoes mt-4 flex justify-between">
+                <a href="{{ url_for('finalizar_pedido') }}"
+                   class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    Finalizar
+                </a>
+                <a href="{{ url_for('opcoes') }}"
+                   class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    Continuar
+                </a>
             </div>
         {% else %}
-            <p style="text-align: center; color: #888;">Carrinho vazio</p>
+            <p class="text-center text-gray-500">Carrinho vazio</p>
         {% endif %}
     </div>
 
     <!-- Conteúdo Principal -->
     <div class="container">
-        <img src="{{ url_for('static', filename='Logo.png') }}" width="150" height="150">
+        <!-- Centralizando a imagem com classes Tailwind: block e mx-auto -->
+        <img src="{{ url_for('static', filename='Logo.png') }}" width="150" height="150" class="logo block mx-auto" alt="Logo Sane Online">
         <hr>
-        <h1>Opções do Dia</h1>
+        <!-- Realçando "Opções do Dia" com classes Tailwind para tamanho, peso da fonte e sombra, e agora com a cor branca -->
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.4);">Opções do Dia</h1>
         <hr>
         <div class="menu">
             {% for item in opcoes %}
                 <div class="item">
-                    <img src="{{ url_for('static', filename=item.imagem) }}" width="150" height="150">
+                    <img src="{{ url_for('static', filename='uploads/' + item.imagem) }}" width="150" height="150" alt="{{ item.nome }}">
                     <p><strong>{{ item.nome }}</strong></p>
-                    <p>Preço: {{ item.preco|format_brl }}</p>  <!-- Usando o filtro aqui -->
-                    <hr>
-                    <a href="{{ url_for('adicionar_carrinho', id_item=item.id) }}">
-                        <button>Adicionar ao Carrinho</button>
+                    <p class="text-green-600">Preço: {{ item.preco|format_brl }}</p> <!-- Preço do item agora verde -->
+                    <hr class="w-full my-3">
+                    <!-- Botão "Adicionar ao Carrinho" para itens fixos -->
+                    <a href="{{ url_for('adicionar_carrinho', id_item=item.id) }}"
+                       class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mt-auto">
+                        Adicionar ao Carrinho
                     </a>
                 </div>
             {% endfor %}
         </div>
         
-        <h2>Monte seu prato</h2>
-        <p>Preço: {{ 20.00|format_brl }}</p>
+        <!-- Título "Monte seu prato" agora branco com sombra -->
+        <h2 class="text-white drop-shadow-lg" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.4);">Monte seu prato</h2>
+        <p class="text-lg mb-4 text-green-600">Preço: {{ 20.00|format_brl }}</p> <!-- Preço do prato personalizado já era verde -->
         <hr>
-        <form action="{{ url_for('adicionar_personalizado') }}" method="post">
-            <div style="column-count: 2; column-gap: 20px;">
+        <form action="{{ url_for('adicionar_personalizado') }}" method="post" class="personalizado-form">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-3 mb-5 text-left">
                 {% for ingrediente in ingredientes %}
-                    <label style="display: block; margin-bottom: 8px;">
-                        <input type="checkbox" name="ingredientes" value="{{ ingrediente }}">
+                    <label class="flex items-center text-gray-700 hover:text-blue-600 cursor-pointer transition duration-200">
+                        <input type="checkbox" name="ingredientes" value="{{ ingrediente }}" class="form-checkbox h-5 w-5 text-blue-600 rounded mr-2">
                         {{ ingrediente }}
                     </label>
                 {% endfor %}
             </div>
-            <button type="submit" style="margin-top: 15px; background: #ff6b6b; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            <!-- Botão "Adicionar ao Carrinho" para prato personalizado -->
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
                 Adicionar ao Carrinho
             </button>
         </form>
     </div>
-    <footer>
+    <footer class="bg-gray-800 text-white text-center p-5 mt-auto">
         <p>📍 Maceió - Alagoas | &copy; 2025 Sane Online</p>
     </footer>
 </body>
