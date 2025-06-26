@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Cardápio</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Estilos gerais para centralizar e dar um bom espaçamento */
+    body {
+      font-family: "Inter", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background-color: #f3f4f6; /* Cor de fundo suave */
+      color: #333;
+    }
+    h1, h2 {
+      color: #1f2937; /* Cor de título mais escura */
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    a {
+      color: #3b82f6; /* Cor de link azul */
+      text-decoration: none;
+      margin-bottom: 20px;
+      display: inline-block;
+      padding: 8px 15px;
+      border-radius: 8px;
+      background-color: #e0f2fe; /* Fundo suave para o botão de voltar */
+      transition: background-color 0.2s ease;
+    }
+    a:hover {
+      background-color: #bfdbfe;
+    }
+
+    /* Estilos do formulário */
+    form {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 40px;
+    }
+    form div {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #4b5563;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="file"] {
+      width: calc(100% - 20px); /* Ajuste para padding */
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="file"]:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    }
+    input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.2); /* Aumenta um pouco o tamanho do checkbox */
+    }
+    input[type="submit"] {
+      background-color: #22c55e; /* Verde vibrante */
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      width: 100%;
+      font-weight: 700;
+    }
+    input[type="submit"]:hover {
+      background-color: #16a34a; /* Verde mais escuro no hover */
+      transform: translateY(-1px);
+    }
+
+    /* Estilos da tabela */
+    table {
+      width: 100%;
+      max-width: 900px;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden; /* Garante que os cantos arredondados funcionem */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      background-color: #f9fafb; /* Fundo para o cabeçalho da tabela */
+      color: #4b5563;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    tr:last-child td {
+      border-bottom: none; /* Remove a borda do último item */
+    }
+    tr:hover {
+      background-color: #f3f4f6; /* Suave destaque ao passar o mouse */
+    }
+    td img {
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+    }
+    td a {
+      background-color: #60a5fa; /* Azul para o botão Editar */
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-right: 8px;
+    }
+    td a:hover {
+      background-color: #3b82f6;
+    }
+    button.danger {
+      background-color: #ef4444; /* Vermelho para o botão Excluir */
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button.danger:hover {
+      background-color: #dc2626;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 40px 0;
+      width: 80%;
+      max-width: 700px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gerenciar Opções de Cardápio</h1>
+  <a href="{{ url_for('admin') }}">← Voltar ao Admin</a>
+
+  <h2>{{ 'Editar' if request.args.get('editar') else 'Nova opção' }}</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div>
+      {{ form.nome.label }}<br>
+      {{ form.nome(size=30, class="w-full") }}
+    </div>
+    <div>
+      {{ form.preco.label }}<br>
+      {{ form.preco(step="0.01", class="w-full") }}
+    </div>
+    <div>
+      {{ form.imagem.label }}<br>
+      {{ form.imagem(class="w-full") }}
+    </div>
+    <div>
+      {{ form.disponivel(class="mr-2") }} {{ form.disponivel.label }}
+    </div>
+    <div>
+      {{ form.submit(class="w-full") }}
+    </div>
+  </form>
+
+  <hr>
+  <h2>Opções Cadastradas</h2>
+  <table>
+    <thead><tr><th>Nome</th><th>Preço</th><th>Imagem</th><th>Disponível</th><th>Ações</th></tr></thead>
+    <tbody>
+      {% for op in opcoes %}
+      <tr>
+        <td>{{ op.nome }}</td>
+        <td>{{ op.preco|format_brl }}</td>
+        <td>{% if op.imagem %}<img src="{{ url_for('static', filename='uploads/' + op.imagem) }}" width="50">{% endif %}</td>
+        <td>{{ 'Sim' if op.disponivel else 'Não' }}</td>
+        <td>
+          <a href="{{ url_for('gerenciar_cardapio', editar=op._id) }}">Editar</a>
+          <form method="POST" action="{{ url_for('excluir_opcao', item_id=op._id) }}" style="display:inline;">
+            <button type="submit" class="danger">Excluir</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
