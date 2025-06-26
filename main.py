@@ -3,7 +3,7 @@ import json, uuid, os
 from datetime import timedelta, datetime
 from threading import Lock
 from pymongo import MongoClient
-from dotenv import load_doten
+from dotenv import load_dotenv
 from bson.objectid import ObjectId # Importar ObjectId
 from bson.errors import InvalidId # Importar InvalidId para tratamento de erro específico
 
