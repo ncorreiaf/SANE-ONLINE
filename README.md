@@ -23,7 +23,7 @@ Um sistema simples de pedidos de marmitas online desenvolvido com **Flask**, **P
 - openpyxl
 - HTML + Jinja2 Templates
 - Bootstrap (frontend)
-- JSON + Excel como "banco de dados" leve
+- JSON + Banco de dados MongoDB
 
 ---
 
