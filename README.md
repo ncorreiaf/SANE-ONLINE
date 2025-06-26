@@ -9,7 +9,7 @@ Um sistema simples de pedidos de marmitas online desenvolvido com **Flask**, **P
 - Exibição de cardápio com imagens e preços
 - Adição de pratos prontos ou personalizados ao carrinho
 - Finalização de pedido com formulário completo
-- Armazenamento dos pedidos em arquivo Excel (`pedidos.xlsx`)
+- Armazenamento dos pedidos em banco
 - Painel administrativo para habilitar/desabilitar itens do cardápio
 - Formatação de valores no padrão brasileiro (R$)
 
