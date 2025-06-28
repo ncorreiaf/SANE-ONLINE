@@ -44,7 +44,7 @@ h1, h3, h2, p {
 img {
     width: 150px; /* Ajuste conforme necessário */
     height: 150px;
-    border-radius: 10px; /* Deixa as bordas arredondadas */
+    border-radius: 8px; /* Deixa as bordas arredondadas */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Suaviza a animação */
     margin: 10px 0; /* Adiciona espaçamento acima e abaixo do botão */
 }
