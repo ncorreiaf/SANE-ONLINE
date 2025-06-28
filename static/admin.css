@@ -34,6 +34,7 @@
     height: 150px; /* Sua alteração de tamanho */
     display: block;
     margin: 0 auto 25px;
+    border-radius: 8px;
   }
   
   h1, h2, h3, p {
