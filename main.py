@@ -114,6 +114,10 @@ def salvar_pedido(dados):
     with pedido_lock:
         PEDIDOS_LISTA.insert_one(dados)
 
+def obter_proximo_id():
+    ultimo = OPCOES_DISPONIVEIS.find_one({"id": {"$exists": True}}, sort=[("id", -1)])
+    return (ultimo["id"] + 1) if ultimo else 1
+
 def formatar_preco(preco):
     return f"R$ {preco:,.2f}".replace(".", "X").replace(",", ".").replace("X", ",")
 
@@ -161,18 +165,20 @@ def opcoes():
 def adicionar_carrinho(id_item):
     if 'carrinho' not in session:
         session['carrinho'] = []
-    
+
     # Usar ObjectId para buscar no MongoDB se o ID não for numérico
     try:
-        query_id = ObjectId(id_item)
-        item = OPCOES_DISPONIVEIS.find_one({"_id": query_id, "disponivel": True})
-    except InvalidId: # Se a conversão para ObjectId falhar, tenta como inteiro
+        # Primeiro tenta como inteiro
+        query_id = int(id_item)
+        item = OPCOES_DISPONIVEIS.find_one({"id": query_id, "disponivel": True})
+    except ValueError:
         try:
-            query_id = int(id_item)
+            # Se falhar, tenta como ObjectId
+            query_id = ObjectId(id_item)
             item = OPCOES_DISPONIVEIS.find_one({"_id": query_id, "disponivel": True})
-        except ValueError:
-            # ID não é ObjectId nem int válido, então não encontra o item
+        except InvalidId:
             item = None
+
 
     if item:
         # Garante que o _id é transformado em string ao adicionar ao carrinho
@@ -281,7 +287,9 @@ def gerenciar_cardapio():
             OPCOES_DISPONIVEIS.update_one({"_id": query_id}, {"$set": data})
         else:
             # Para novos itens, o MongoDB gera automaticamente um ObjectId
+            data['id'] = obter_proximo_id()
             OPCOES_DISPONIVEIS.insert_one(data)
+
 
         return redirect(url_for('gerenciar_cardapio'))
 
