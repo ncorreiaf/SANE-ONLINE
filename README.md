@@ -32,7 +32,7 @@ Um sistema simples de pedidos de marmitas online desenvolvido com **Flask**, **P
 
 ---
 
-## 📦 Instalação
+## 📦 Instalação para rodar localmente
 
 1. **Clone este repositório:**
 
@@ -41,7 +41,7 @@ git clone https://github.com/ncorreiaf/SANE-ONLINE.git
 cd SANE-ONLINE
 ```
 
-2. **Dependências Python:**
+2. **Instale as dependências do projeto:**
 ```bash
 pip install Flask pymongo python-dotenv pandas openpyxl
 pip install  flask-wtf wtforms werkzeug
@@ -50,13 +50,37 @@ pip install  flask-wtf wtforms werkzeug
 3. **Instale o MongoDB:**
 
 [MongoDB](https://www.mongodb.com/try/download/community)
-
-4. **Inicialize o servidor**
 ```bash
-mongod --dbpath /caminho/para/seus/dados/db
+Após a instalação, inicialize o software MongoDB Compass.
 ```
 
-5. **Execute o arquivo main**
+4. **Inicialize o servidor**
+
+Crie uma conexão no MongoDB Compass com as seguintes configurações:
+```bash
+URI: mongodb://localhost:27017
+Name: saneonline
+```
+
+5. **Configure as variáveis de ambiente**
+
+Crie um arquivo na pasta raiz do projeto nomeado como *.env* com as seguintes configurações:
+```bash
+SECRET_KEY='chave'
+MONGO_URI='mongodb://localhost:27017/'
+DB_NAME='saneonline'
+```
+Ou
+```bash
+Pegue o arquivo .env.exemple, pois já tem estes valores, e renomeie como .env
+```
+Ou
+```bash
+Pegue suas próprias credenciais no serviço de Database MongoDB Atlas
+```
+
+6. **Execute o arquivo main**
+
 ```bash
 python main.py
 ```
